@@ -1,6 +1,11 @@
 ### build temple
 build/
 
+### go mod
+
+go.sum
+vendor/
+
 ### Go template
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o

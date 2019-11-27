@@ -2,14 +2,14 @@ package qqwry
 
 import (
 	"encoding/binary"
-	"net"
-	"github.com/axgle/mahonia"
-	"os"
 	"errors"
+	"fmt"
+	"github.com/axgle/mahonia"
 	"io/ioutil"
+	"net"
+	"os"
 	"strings"
 	"time"
-	"fmt"
 )
 
 // catch of qqwry.dat in mem

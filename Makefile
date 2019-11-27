@@ -20,27 +20,36 @@ ROOT_REPO_OS_DIST_PATH ?= $(ROOT_DIST)/$(DIST_OS)/release/$(DIST_VERSION)
 ROOT_LOG_PATH ?= ./log
 ROOT_SWAGGER_PATH ?= ./docs
 
+# can use as https://goproxy.io/ https://gocenter.io https://mirrors.aliyun.com/goproxy/
+ENV_GO_PROXY ?= https://goproxy.io/
+
 checkEnvGo:
 ifndef GOPATH
 	@echo Environment variable GOPATH is not set
 	exit 1
 endif
 
-init: checkEnvGo
+init:
 	@echo "~> start init this project"
 	@echo "-> check version"
 	go version
 	@echo "-> check env golang"
 	go env
-	@echo "-> check env dep fix as [ go get -v -u github.com/golang/dep/cmd/dep ]"
-	which dep
-	@echo "-> check env swag if error fix as [ go get -v -u github.com/swaggo/swag/cmd/swag && go get -v github.com/alecthomas/template]"
-	which swag
-	swag --help
 	@echo "~> you can use [ make help ] see more task"
+	-GOPROXY="$(INFO_GO_PROXY)" GO111MODULE=on go mod vendor
 
-checkDepends: checkEnvGo
-	-dep ensure -v
+checkDepends:
+	# in GOPATH just use GO111MODULE=on go mod init to init
+	-GOPROXY="$(INFO_GO_PROXY)" GO111MODULE=on go mod verify
+
+tidyDepends:
+	-GOPROXY="$(INFO_GO_PROXY)" GO111MODULE=on go mod tidy
+
+dep: checkDepends
+	@echo "just check depends info below"
+
+dependenciesGraph:
+	GOPROXY="$(INFO_GO_PROXY)" GO111MODULE=on go mod graph
 
 cleanBuild:
 	@if [ -d ${ROOT_BUILD_PATH} ]; then rm -rf ${ROOT_BUILD_PATH} && echo "~> cleaned ${ROOT_BUILD_PATH}"; else echo "~> has cleaned ${ROOT_BUILD_PATH}"; fi
@@ -63,20 +72,22 @@ checkReleaseDistPath:
 checkReleaseOSDistPath:
 	@if [ ! -d ${ROOT_REPO_OS_DIST_PATH} ]; then mkdir -p ${ROOT_REPO_OS_DIST_PATH} && echo "~> mkdir ${ROOT_REPO_OS_DIST_PATH}"; fi
 
-buildSwagger:
-	which swag
-	swag --version
-	@if [ -d ${ROOT_SWAGGER_PATH} ]; then rm -rf ${ROOT_SWAGGER_PATH} && echo "~> cleaned ${ROOT_SWAGGER_PATH}"; else echo "~> has cleaned ${ROOT_SWAGGER_PATH}"; fi
-	swag init
+runTest:
+	go test -v qqwry/*.go
 
-buildMain: buildSwagger
+runTestConveyQQWry:
+	@echo "-> use goconvey at https://github.com/smartystreets/goconvey"
+	@echo "-> see report at http://localhost:8080"
+	which goconvey
+	goconvey -depth=1 -launchBrowser=false -workDir=$$PWD/qqwry
+
+buildMain:
+	@echo "-> start build local OS"
 	@go build -o build/main main.go
 
-buildARCH: buildSwagger
+buildARCH:
+	@echo "-> start build OS:$(DIST_OS) ARCH:$(DIST_ARCH)"
 	@GOOS=$(DIST_OS) GOARCH=$(DIST_ARCH) go build -o build/main main.go
-
-dev: buildMain
-	-./build/main -c ./conf/config.yaml
 
 test: buildMain checkTestDistPath
 	cp ./build/main $(ROOT_TEST_DIST_PATH)
@@ -102,12 +113,19 @@ releaseOS: buildARCH checkReleaseOSDistPath
 
 help:
 	@echo "make init - check base env of this project"
-	@echo "make checkDepends - check depends of project"
+	@echo "make dep - check depends of project"
+	@echo "make dependenciesGraph - see depends graph of project"
+	@echo "make tidyDepends - tidy depends graph of project"
 	@echo "make clean - remove binary file and log files"
+	@echo ""
+	@echo "-- now build name: $(ROOT_NAME) version: $(DIST_VERSION)"
+	@echo "-- testOS or releaseOS will out abi as: $(DIST_OS) $(DIST_ARCH) --"
 	@echo "make test - build dist at $(ROOT_TEST_DIST_PATH)"
 	@echo "make testOS - build dist at $(ROOT_TEST_OS_DIST_PATH)"
-	@echo ""
+	@echo "make testOSTar - build dist at $(ROOT_TEST_OS_DIST_PATH) and tar"
 	@echo "make release - build dist at $(ROOT_REPO_DIST_PATH)"
 	@echo "make releaseOS - build dist at $(ROOT_REPO_OS_DIST_PATH)"
+	@echo "make releaseOSTar - build dist at $(ROOT_REPO_OS_DIST_PATH) and tar"
 	@echo ""
+	@echo "make runTest - run test case"
 	@echo "make dev - run server use conf/config.yaml"
