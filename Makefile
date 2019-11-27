@@ -81,6 +81,9 @@ runTestConveyQQWry:
 	which goconvey
 	goconvey -depth=1 -launchBrowser=false -workDir=$$PWD/qqwry
 
+runTestConveyCase:
+	go test -cover -coverprofile=coverage.txt -covermode=atomic -v qqwry/*.go
+
 buildMain:
 	@echo "-> start build local OS"
 	@go build -o build/main main.go
