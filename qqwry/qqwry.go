@@ -15,14 +15,18 @@ import (
 // catch of qqwry.dat in mem
 var DatData fileData
 
-// new QQwry by qqwry.dat
-func NewQQwry() (qqwry *QQwry) {
-	qqwry = &QQwry{
-		Data: &DatData,
-	}
-	return
-}
-
+// init DatFile to add qqwry.dat
+//	qqwry.DatData.FilePath = "path.dat"
+// this method must use before qqwry.NewQQwry
+// how to confirm qqwry.dat file that the load was successful?
+// can use as this
+//	init := qqwry.DatData.InitDatFile()
+//	if v, ok := init.(error); ok {
+//		if v != nil {
+//			log.Fatalf("init InitDatFile error %s", v)
+//			return
+//		}
+//	}
 func (f *fileData) InitDatFile() (rs interface{}) {
 	// check file exist
 	_, err := os.Stat(f.FilePath)
@@ -60,7 +64,18 @@ func (f *fileData) InitDatFile() (rs interface{}) {
 	return true
 }
 
-// search by ip string
+// new QQwry by qqwry.dat
+// use after qqwry.InitDatFile
+func NewQQwry() (qqwry *QQwry) {
+	qqwry = &QQwry{
+		Data: &DatData,
+	}
+	return
+}
+
+// search by ipv4 string
+//	res := qqwry.NewQQwry().SearchByIPv4("ipv4")
+// res see struct qqwry.ResQQwry
 func (q *QQwry) SearchByIPv4(ip string) (res ResQQwry) {
 
 	res = ResQQwry{}

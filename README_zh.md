@@ -1,3 +1,8 @@
+[![TravisBuildStatus](https://api.travis-ci.org/sinlov/qqwry-golang.svg?branch=master)](https://travis-ci.org/sinlov/qqwry-golang)
+[![GoDoc](https://godoc.org/github.com/sinlov/qqwry-golang?status.png)](https://godoc.org/github.com/sinlov/qqwry-golang/qqwry)
+[![GoReportCard](https://goreportcard.com/badge/github.com/sinlov/qqwry-golang)](https://goreportcard.com/report/github.com/sinlov/qqwry-golang)
+[![codecov](https://codecov.io/gh/sinlov/qqwry-golang/branch/master/graph/badge.svg)](https://codecov.io/gh/sinlov/qqwry-golang)
+
 # 纯真IP库 golang 版本
 
 - 有关 纯真IP 库的文档见 [QQ纯真数据库文件格式详解.pdf](doc/QQ纯真数据库文件格式详解.pdf)
