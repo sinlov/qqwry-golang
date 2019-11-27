@@ -1,8 +1,9 @@
 package control
 
 import (
-	"net/http"
+	"encoding/json"
 	"fmt"
+	"net/http"
 )
 
 // Response
@@ -21,7 +22,7 @@ func (r *Response) IsJSONP() string {
 func (r *Response) Return(data interface{}, code int) {
 	jsonp := r.IsJSONP()
 
-	rs, err := ffjson.Marshal(data)
+	rs, err := json.Marshal(data)
 	if err != nil {
 		code = 500
 		rs = []byte(fmt.Sprintf(`{"errcode":500, "errmsg":"%s"}`, err.Error()))

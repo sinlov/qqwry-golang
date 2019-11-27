@@ -1,3 +1,7 @@
+[![TravisBuildStatus](https://api.travis-ci.org/sinlov/qqwry-golang.svg?branch=master)](https://travis-ci.org/sinlov/qqwry-golang)
+[![codecov](https://codecov.io/gh/sinlov/qqwry-golang/branch/master/graph/badge.svg)](https://codecov.io/gh/sinlov/qqwry-golang)
+
+
 # qqwry/cz88 IP local lib with golang
 
 - Document of qqwry.data see [QQ纯真数据库文件格式详解.pdf](doc/QQ纯真数据库文件格式详解.pdf)
