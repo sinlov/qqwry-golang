@@ -89,6 +89,10 @@ buildARCH:
 	@echo "-> start build OS:$(DIST_OS) ARCH:$(DIST_ARCH)"
 	@GOOS=$(DIST_OS) GOARCH=$(DIST_ARCH) go build -o build/main main.go
 
+dev: buildMain
+	@echo "bin file at ./build/main"
+	-./build/main
+
 test: buildMain checkTestDistPath
 	cp ./build/main $(ROOT_TEST_DIST_PATH)
 	cp ./conf/config.yaml $(ROOT_TEST_DIST_PATH)

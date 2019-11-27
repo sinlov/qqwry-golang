@@ -1,5 +1,6 @@
 ### build temple
 build/
+dist/
 
 ### go mod
 

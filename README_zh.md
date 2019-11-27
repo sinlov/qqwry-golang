@@ -12,10 +12,38 @@ curl -s -O 'http://update.cz88.net/soft/setup.zip'
 - [ ] 提供 http 服务
 - [ ] 提供 docker 容器
 
-# build
+# 使用
+
+```go
+import (
+	"fmt"
+	"github.com/sinlov/qqwry-golang/qqwry"
+)
+	var datPath = "./dat/qqwry_2018-11-15.dat"
+	qqwry.DatData.FilePath = datPath
+	init := qqwry.DatData.InitDatFile()
+	if v, ok := init.(error); ok {
+		if v != nil {
+			fmt.Printf("init InitDatFile error %s", v)
+		}
+	}
+
+	res := qqwry.NewQQwry().SearchByIPv4("searchIP")
+```
+
+# 构建
 
 构建注意
-- 因为qqwry.dat 文件使用了 RBK
+- 因为qqwry.dat 文件使用了 GBK 编码，故转换使用了库 [github.com/axgle/mahonia](https://github.com/axgle/mahonia)
+
+```bash
+# 初始化依赖
+make init
+# 运行 main.go
+make dev
+# 运行测试用例
+make runTest
+```
 
 ------------
 

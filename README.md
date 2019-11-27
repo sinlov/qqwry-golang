@@ -12,10 +12,37 @@ curl -s -O 'http://update.cz88.net/soft/setup.zip'
 - [ ] http server of IP local
 - [ ] docker image of server
 
+# use
+
+```go
+import (
+	"fmt"
+	"github.com/sinlov/qqwry-golang/qqwry"
+)
+	var datPath = "./dat/qqwry_2018-11-15.dat"
+	qqwry.DatData.FilePath = datPath
+	init := qqwry.DatData.InitDatFile()
+	if v, ok := init.(error); ok {
+		if v != nil {
+			fmt.Printf("init InitDatFile error %s", v)
+		}
+	}
+
+	res := qqwry.NewQQwry().SearchByIPv4("searchIP")
+```
 
 # build
 
 - because `qqwry.dat` use GBK char, so use lib [github.com/axgle/mahonia](https://github.com/axgle/mahonia)
+
+```bash
+# init project depends
+make init
+# run main.go
+make dev
+# run test case
+make runTest
+```
 
 ---------
 
